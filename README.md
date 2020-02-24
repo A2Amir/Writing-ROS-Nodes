@@ -1,6 +1,6 @@
 # Writing ROS Nodes
 
-In [the previous lesson]() I've created a Catkin workspace and added the simple arm package to it, 
+In [the previous lesson](https://github.com/A2Amir/Catkin-Workspace-for-ROS) I've created a Catkin workspace and added the simple arm package to it, 
 In this lesson, I will be writing notes in Python that publish and subscribe to topics and write a Ross service that can be called from other nodes or from the command line.
 
 The first node that I will be writing is called simple mover. The simple mover node does nothing more than publish joint angle commands to simple arm.
