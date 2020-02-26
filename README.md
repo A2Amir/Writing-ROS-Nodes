@@ -611,7 +611,44 @@ def joint_states_callback(self, data):
 ```
 The look_away_callback is receiving data from the /rgb_camera/image_raw topic. The first line of this method verifies that the arm is not moving and also checks if the the image is uniform. If the arm isn't moving and the image is uniform, then a GoToPositionRequest() message is created and sent using the safe_move service, moving both joint angles to 1.57. The method also logs a message warning you that the camera has detected a uniform image along with the elapsed time to return to a nicer image.
 
+### Updating the launch file
 
+
+Just as I did with the arm_mover node, to get look_away to launch with the rest of the nodes, I will need to modify robot_spawn.launch, which can be found in ~/catkin_ws/src/simple_arm/launch. modify robot_spawn.launch by:
+
+	Cd ~/catkin_ws/src/simple_arm/launch
+	nano robot_spawn.launch
+	add the following code
+		<!-- The look away node -->
+		 <node name="look_away" type="look_away" pkg="simple_arm"/>
+
+       use ctrl-x followed by y then enter to save it.
+       
+Note: While editing this file, it will be helpful to set max_joint_2_angle: 1.57 in arm_mover so that it isn't necessary to set it again from the command line.
+
+### Launch and Interact
+I can now launch and interact with simple_arm just as before:
+
+	cd ~/catkin_ws
+	catkin_make
+	source devel/setup.bash
+	roslaunch simple_arm robot_spawn.launch
+
+**Please note that if you are having trouble with roslaunch simple_arm robot_spawn.launch please try the safe_spawner.sh script in the scripts folder. You can launch by using  ./safe_spawner.sh in a terminal of your choice.**
+
+After launching, the arm should move away from the grey sky and look towards the blocks. To view the camera image stream, I can use the same command as before:
+
+	rqt_image_view /rgb_camera/image_raw
+
+To check that everything is working as expected, I open a new terminal, source devel/setup.bash, and send a service call to point the arm directly up towards the sky (note that the line break in the message is necessary):
+
+	rosservice call /arm_mover/safe_move "joint_1: 0
+	joint_2: 0"
+	
+As seen the Look Away node move it back towards the blocks.
+
+
+# 4. Logging overview
 ```python
 
 ```
