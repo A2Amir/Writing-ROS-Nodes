@@ -248,7 +248,49 @@ This tells catkin which files to generate code for. Lastly, make sure that the g
 This macro is actually responsible for generating the code. For more information about CMakeLists.txt check out [this page](http://wiki.ros.org/catkin/CMakeLists.txt) on the ROS wiki.
 
 
-Then use use ctrl-x followed by y then enter to save the script 
+Then use use ctrl-x followed by y then enter to save the changes in the CMakeLists.txt file.
+
+### Modifying package.xml
+
+Now that the CMakeLists.txt file has been covered, I should technically be able to build the project. However, there’s one more file which needs to be modified, package.xml. package.xml is responsible for defining many of the package’s properties, such as the name of the package, version numbers, authors, maintainers, and dependencies.
+
+When worring about the dependencies check in [the previous lesson](https://github.com/A2Amir/Catkin-Workspace-for-ROS), which was about build-time dependencies and run-time package dependencies. When **rosdep** is searching for these dependencies, it’s the package.xml file that is being parsed. Let’s add the message_generation and message_runtime dependencies.
+
+            cd ~/catkin_ws/src/simple_arm/ 	
+	    nano   package.xml
+	    add into package.xml:
+	    
+		 <build_depend>message_generation</build_depend>
+ 		 <run_depend>message_runtime</run_depend>
+	   ue use ctrl-x followed by y then enter to save the script.
+	   
+You are now ready to build the package! For more information about package.xml, check out [he ROS Wiki](http://wiki.ros.org/catkin/package.xml)
+
+
+### Building  the package
+
+If you build the workspace successfully, you should now find that a python package containing a module for the new service GoToPosition has been created deep down in the devel directory.
+cd ~/catkin_ws
+catkin_make
+cd devel/lib/python2.7/dist-packages
+ls
+After sourcing the newly created setup.bash, the new simple_arm package has now become part of your PYTHONPATH environment variable, and is ready for use!
+	cd ~/catkin_ws  	
+	source  devel/setup.bash
+	env | grep PYTHONPATH
+Creating the empty arm_mover node script
+The steps you take to create the arm_mover node are exactly the same as the steps you took to create the simple_mover script, excepting the actual name of the script itself.
+
+	cd ~/catkin_ws
+	cd src/simple_arm/scripts (if there is no scripts folder, make it by using mkdir scripts then cd to itarm_monode/)
+	touch arm_mover
+	chmod u+x arm_mover
+Arm Mover: The Code
+	cd ~/catkin_ws
+	cd src/simple_arm/scripts
+	nano arm_mover
+You have opened the arm_mover script with the nano editor, now copy and paste the code below from [this file]() into the script and use ctrl-x followed by y then enter to save the script.
+
 
 ```python
 ```
