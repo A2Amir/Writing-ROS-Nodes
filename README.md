@@ -11,6 +11,8 @@ In this lesson, I will be writing nodes in Python that publish and subscribe to 
 
 # 1. ROS Publishers
 
+#### Defining Publishers
+
 Before seeing the code for **simple_mover**, it may be helpful to see how ROS Publishers work in Python. Publishers allow a node to send messages to a topic, so that data from the node can be used in other parts of the ROS system. In Python, ROS publishers typically have the following definition format, although other parameters and arguments are possible:
 
     pub1 = rospy.Publisher("/topic_name", message_type, queue_size=size)
@@ -19,6 +21,7 @@ Before seeing the code for **simple_mover**, it may be helpful to see how ROS Pu
 
 * **Asynchronous publishing** means that a publisher can store messages in a queue until the messages can be sent. If the number of messages published exceeds the size of the queue, the oldest messages are dropped. **The queue size can be set using the queue_size parameter**.
 
+#### Using Publishers
 
 Once the publisher has been created as above, a message with the specified data type can be published as follows:
 	  
@@ -141,6 +144,41 @@ Below is a gif showing what the expected movements should look like.
 <p align="right">
 <img src="./img/1.gif" alt="Running simple_mover code" />
 <p align="center">
+
+# 2. ROS Services
+
+#### Defining services
+
+In this section I am going to code an another node called **arm_mover** which implements the **safe_move** service to allow the arm to be controlled with service calls.
+
+A ROS service allows request/response communication between nodes. Within the node providing the service, request messages are handled by functions or methods. Once the requests have been handled successfully, the node providing the service sends a message back to the requester node. 
+
+In Python, a ROS service can be created using the following definition format:
+
+	service = rospy.Service('service_name', serviceClassName, handler)
+
+Here, the **service_name** is the name given to the service. Other nodes will use this name to specify which service they are sending requests to. Each service has a definition provided in an .srv file. This is a text file that provides the proper message type for both requests and responses and the **serviceClassName** comes from this file name where the service definition exists.
+
+The **handler** is the name of the function or method that handles the incoming service message. This function is called each time the service is called and the message from the service call is passed to the handler as an argument. The handler should return an appropriate service response message.
+
+
+#### Using Services
+
+Services can be called directly from the command line and I will show you an example of this in the upcoming arm_mover concepts. On the other hand, to use a ROS service from within another node, I will define a ServiceProxy, which provides the interface for sending messages to the service:
+
+	service_proxy = rospy.ServiceProxy('service_name', serviceClassName)
+
+One way the ServiceProxy can then be used to send requests is as follows:
+
+	msg = serviceClassNameRequest()
+	response = service_proxy(msg)
+
+In the code above, a new service message is created by calling the serviceClassNameRequest() method. This method is provided by rospy and its name is given by appending Request() to the name used for serviceClassName. Since the message is new, the message attributes should be updated to have the appropriate data. Next, the service_proxy can be called with the message and the response stored.
+
+#### Description of Arm Mover
+
+
+For other ways to pass data to service_proxy, see the ROS documentation here.
 
 
 ```python
