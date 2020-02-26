@@ -39,8 +39,7 @@ First, open a new terminal, next:
 	5. nano simple_mover
 
 6. I have opened the simple_mover script with the nano editor, now copy 
-	and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py) into the script 	
-	and use ctrl-x followed by y then enter to save the script.
+	and paste the code from**[the simple_mover node](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py)** into the script and use ctrl-x followed by y then enter to save the script.
 
 7. chmod u+x simple_mover
  
@@ -122,6 +121,27 @@ if __name__ == '__main__':
     except rospy.ROSInterruptException:
         pass
 ```
+If the name variable is set to “main”, indicating that this script is being executed directly, the mover() function will be called. The try/except blocks here are significant as rospy uses exceptions extensively. The particular exception being caught here is the ROSInterruptException. This exception is raised when the node has been signaled for shutdown. If there was perhaps some sort of cleanup needing to be done before the node shuts down, it would be done here. More information about rospy exceptions can be found [here](http://wiki.ros.org/rospy/Overview/Exceptions).
+
+#### Running simple_mover code
+
+Assuming that my workspace has recently been built and it’s setup.bash has been sourced, I can launch simple_arm as follows:
+
+	cd ~/catkin_ws
+	roslaunch simple_arm robot_spawn.launch
+	
+Once ROS Master, Gazebo, and all of our relevant nodes are up and running, I can finally launch simple_mover. To do so, open a new terminal and type the following commands:
+
+	cd ~/catkin_ws
+	source devel/setup.bash
+	rosrun simple_arm simple_mover
+	
+Below is a gif showing what the expected movements should look like.
+
+<p align="right">
+<img src="./img/1.gif" alt="Running simple_mover code" />
+<p align="center">
+
 
 ```python
 ```
