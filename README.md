@@ -42,6 +42,90 @@ First, open a new terminal, next:
 	and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py) into the script 	
 	and use ctrl-x followed by y then enter to save the script.
 
-	7. chmod u+x simple_mover
+7. chmod u+x simple_mover
  
 #### The code: Explained
+
+
+```python
+#!/usr/bin/env python
+
+import math
+import rospy
+from std_msgs.msg import Float64
+```
+
+rospy is the official Python client library for ROS. It provides most of the fundamental functionality required for interfacing with ROS via Python. It has interfaces for creating Nodes, interfacing with Topics, Services, Parameters and more. It will certainly be worth your time to check out the API documentation [here](http://docs.ros.org/kinetic/api/rospy/html/). General information about rospy, including other tutorials may be found on the [ROS Wiki](http://wiki.ros.org/rospy_tutorials/Tutorials/WritingPublisherSubscriber).
+
+
+```python
+from std_msgs.msg import Float64
+```
+
+From the std_msgs package, I import Float64, which is one of the primitive message types in ROS. The [std_msgs](http://wiki.ros.org/std_msgs) package also contains all of the other primitive types. Later on in this script, I will be publishing Float64 messages to the position command topics for each joint.
+
+
+```python
+def mover():
+    pub_j1 = rospy.Publisher('/simple_arm/joint_1_position_controller/command',
+                             Float64, queue_size= 10)
+    pub_j2 = rospy.Publisher('/simple_arm/joint_2_position_controller/command',
+                             Float64, queue_size=10)
+```
+
+At the top of the mover function, two publishers are declared, one for joint 1 commands, and one for joint 2 commands. Here, the queue_size parameter is used to determine the maximum number messages that may be stored in the publisher queue before messages are dropped. More information about this parameter can be found [here](http://wiki.ros.org/rospy/Overview/Publishers and Subscribers#queue_size:_publish.28.29_behavior_and_queuing).
+
+
+```python
+ rospy.init_node('arm_mover')
+```
+
+Initializes a client node and registers it with the master. Her **arm_mover** is the name of the node. init_node() must be called before any other rospy package functions are called. The argument anonymous=True makes sure that you always have a unique name for your node.
+
+
+```python
+ rate = rospy.Rate(10)
+```
+
+The rate object is created here with a value of 10 Hertz. Rates are used to limit the frequency at which certain loops (for example publishing at a frequency of 10Hz) spin in ROS . Choosing a rate which is too high may result in unnecessarily high CPU usage, while choosing a value too low could result in high overall system latency. Choosing sensible values for all of the nodes in a ROS system is a bit of a fine-art.
+
+
+```python
+start_time = 0
+
+    while not start_time:
+        start_time = rospy.Time.now().to_sec()
+
+```
+
+start_time is used to determine how much time has elapsed. When using ROS with simulated time (as I am doing here), rospy.Time.now() will initially return 0, until the first message has been received on the /clock topic. This is why start_time is set and polled continuously until a nonzero value is returned (more information [here](http://wiki.ros.org/rospy/Overview/Time)). 
+
+
+```python
+
+    while not rospy.is_shutdown():
+        elapsed = rospy.Time.now().to_sec() - start_time
+        pub_j1.publish(math.sin(2*math.pi*0.1*elapsed)*(math.pi/2))
+        pub_j2.publish(math.sin(2*math.pi*0.1*elapsed)*(math.pi/2))
+        rate.sleep()
+
+```
+
+This the main loop. Due to the call to rate.sleep(), the loop is traversed at approximately 10 Hertz. Each trip through the body of the loop will result in two joint command messages being published. The joint angles are sampled from a sine wave with a period of 10 seconds, and in magnitude from [−π/2,+π/2-\pi/2, +\pi/2−π/2,+π/2]. When the node receives the signal to shut down (either from the master, or via SIGINT signal in a console window), the loop will be exited.
+
+
+
+```python
+if __name__ == '__main__':
+    try:
+        mover()
+    except rospy.ROSInterruptException:
+        pass
+```
+
+```python
+```
+```python
+```
+
+
