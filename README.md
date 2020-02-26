@@ -661,7 +661,7 @@ All levels of logging messages are recorded in ROS log files, but some message l
 
 
 <p align="right">
-<img src="./img/3.png" alt="Running arm_mover code"  height="200" width="400"/>
+<img src="./img/3.png" alt="All levels of logging messages "  height="200" width="400"/>
 <p align="right">
 
 ### Filtering and saving log messages from /rosout
@@ -691,19 +691,16 @@ Other possible rospy options for log_level are INFO, WARN, ERROR, and FATAL.
 It is also possible to change how messages to stdout and stderr are displayed or logged. Within a package's .launch file, the output attribute for a node tag can be set to "screen" or "log". The following table summarizes how the different output options change the display of the node's stdout and stderr messages:
 
 <p align="right">
-<img src="./img/4.png" alt="Running arm_mover code"  height="150" width="300"/>
+<img src="./img/4.png" alt="Modifying display "  height="150" width="300"/>
 <p align="right">
 
 
 For example, setting output="screen" for the look_away node in robot_spawn.launch will display both stdout and stderr messages in the screen:
-  <!-- The look away node -->
-  <node name="look_away" type="look_away" pkg="simple_arm" output="screen"/>
+
+	  <!-- The look away node -->
+	  <node name="look_away" type="look_away" pkg="simple_arm" output="screen"/>
+  
 If the output attribute is left empty, the default is "log".
 
-```python
 
-```
 
-```python
-
-```
