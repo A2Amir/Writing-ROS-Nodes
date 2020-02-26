@@ -255,14 +255,15 @@ Then use use ctrl-x followed by y then enter to save the changes in the CMakeLis
 Now that the CMakeLists.txt file has been covered, I should technically be able to build the project. However, there’s one more file which needs to be modified, package.xml. package.xml is responsible for defining many of the package’s properties, such as the name of the package, version numbers, authors, maintainers, and dependencies.
 
 When worring about the dependencies check in [the previous lesson](https://github.com/A2Amir/Catkin-Workspace-for-ROS), which was about build-time dependencies and run-time package dependencies. When **rosdep** is searching for these dependencies, it’s the package.xml file that is being parsed. Let’s add the message_generation and message_runtime dependencies.
-
-            cd ~/catkin_ws/src/simple_arm/ 	
-	    nano   package.xml
-	    add into package.xml:
+	
+	cd ~/catkin_ws/src/simple_arm/
+	nano   package.xml
+	add into package.xml:
 	    
 		 <build_depend>message_generation</build_depend>
  		 <run_depend>message_runtime</run_depend>
-	   ue use ctrl-x followed by y then enter to save the script.
+	   
+	ue use ctrl-x followed by y then enter to save the script.
 	   
 You are now ready to build the package! For more information about package.xml, check out [he ROS Wiki](http://wiki.ros.org/catkin/package.xml)
 
