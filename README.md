@@ -38,7 +38,7 @@ First, open a new terminal, next:
 	touch simple_mover
 	nano simple_mover
 
-You have opened the simple_mover script with the nano editor, now copy and paste the code below from [this file]() into the script and use ctrl-x followed by y then enter to save the script.
+	You have opened the simple_mover script with the nano editor, now copy and paste the code below from [this file]() into the script and use ctrl-x followed by y then enter to save the script.
 
 	chmod u+x simple_mover
  
