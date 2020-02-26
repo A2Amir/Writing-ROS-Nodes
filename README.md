@@ -456,10 +456,40 @@ To view the camera image stream, I can use the command **rqt_image_view** (you c
 
 
 <p align="right">
-<img src="./img/1.png" alt="Running arm_mover code" />
-<p align="center">
+<img src="./img/1.png" alt="Running arm_mover code"  height="400" width="600"/>
+<p align="right">
 	
 ### Adjusting the view
+
+As seen above the camera is displaying a gray image. This is as to be expected, given that it is straight up towards the gray sky of my gazebo world. To point the camera towards the numbered blocks on the counter top, I would need to rotate both joint 1 and joint 2 by approximately pi/2 radians. Let’s give it a try:
+
+	cd ~/catkin_ws/
+	source devel/setup.bash
+	rosservice  call /arm_mover/safe_move "joint_1: 1.57
+	joint_2: 1.57"
+	
+Note: rosservice call can tab-complete the request message, so that you don’t have to worry about writing it out by hand. Also, be sure to include a line break between the two joint parameters.
+
+Upon entering the command, I should be able to see the arm move and eventually stop, reporting the amount of time it took to move the arm to the console. This is as expected.
+
+What was not expected is the resulting position of the arm. Looking at the roscore console, we can very clearly see what the problem was. The requested angle for joint 2 was out of the safe bounds. We requested 1.57 radians, but the maximum joint angle was set to 1.0 radians.
+By setting the max_joint_2_angle on the parameter server, I should be able to bring the blocks into view the next time a service call is made. To increase joint 2’s maximum angle, I can use the command rosparam:
+	
+	
+	rosparam set /arm_mover/max_joint_2_angle 1.57
+	
+Now I should be able to move the arm such that all of the blocks are within the field of view of the camera:
+
+	rosservice call /arm_mover/safe_move "joint_1: 1.57
+	joint_2: 1.57"
+	rqt_image_view /rgb_camera/image_raw
+
+
+
+<p align="right">
+<img src="./img/2.png" alt="Running arm_mover code"  height="400" width="600"/>
+<p align="right">
+	
 ```python
 ```
 
