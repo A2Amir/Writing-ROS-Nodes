@@ -649,6 +649,57 @@ As seen the Look Away node move it back towards the blocks.
 
 
 # 4. Logging overview
+In the code for the simple_mover, arm_mover and look_away nodes, I used lot of logging statements. Rospy has several message levels and provides a variety of options for how to display or store these messages:
+
+	rospy.logdebug(...)
+	rospy.loginfo(...)
+	rospy.logwarn(...)
+	rospy.logerr(...)
+	rospy.logfatal(...)
+
+All levels of logging messages are recorded in ROS log files, but some message levels may also be sent to Python **stdout**, Python **stderr**, or the ROS topic **/rosout**. The following table summarizes the default locations log messages are written to (source [here](http://wiki.ros.org/rospy/Overview/Logging)):
+
+
+<p align="right">
+<img src="./img/3.png" alt="Running arm_mover code"  height="150" width="300"/>
+<p align="right">
+
+### Filtering and saving log messages from /rosout
+
+Note that for messages written to /rosout, I can see the messages in real time as your program is running by echoing: 
+
+	rostopic echo /rosout
+
+Although it can be helpful to view messages this way, because of the volume of messages written to that topic, it can sometimes be helpful to filter messages by piping them to [grep](https://en.wikipedia.org/wiki/Grep). These grepped messages can also be saved to a file for debugging:
+
+	rostopic echo /rosout | grep insert_search_expression_here
+	
+
+	rostopic echo /rosout | grep insert_search_expression_here > path_to_output/output.txt
+	
+	
+### Modifying message level sent to /rosout
+
+Based on the summarized table above, logdebug messages are not written to **/rosout** by default, it is possible to modify the level of logging messages written to /rosout to display them there, or change the level of logging messages written to /rosout to be more restrictive. To do this I must set the log_level attribute within the rospy.init_node code. For example, if I'd like to allow lodebug messages to be written to /rosout, that can be done as follows:
+
+	rospy.init_node('my_node', log_level=rospy.DEBUG)
+	
+Other possible rospy options for log_level are INFO, WARN, ERROR, and FATAL.
+
+### Modifying display of messages sent to stdout and stderr
+
+It is also possible to change how messages to stdout and stderr are displayed or logged. Within a package's .launch file, the output attribute for a node tag can be set to "screen" or "log". The following table summarizes how the different output options change the display of the node's stdout and stderr messages:
+
+<p align="right">
+<img src="./img/4.png" alt="Running arm_mover code"  height="150" width="300"/>
+<p align="right">
+
+
+For example, setting output="screen" for the look_away node in robot_spawn.launch will display both stdout and stderr messages in the screen:
+  <!-- The look away node -->
+  <node name="look_away" type="look_away" pkg="simple_arm" output="screen"/>
+If the output attribute is left empty, the default is "log".
+
 ```python
 
 ```
