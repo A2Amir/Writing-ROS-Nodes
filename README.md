@@ -482,6 +482,7 @@ Now I should be able to move the arm such that all of the blocks are within the 
 
 	rosservice call /arm_mover/safe_move "joint_1: 1.57
 	joint_2: 1.57"
+	
 	rqt_image_view /rgb_camera/image_raw
 
 
@@ -490,6 +491,12 @@ Now I should be able to move the arm such that all of the blocks are within the 
 <img src="./img/2.png" alt="Running arm_mover code"  height="400" width="600"/>
 <p align="right">
 	
+As seen above all of the blocks are within the field of view.
+
+
+# 3. ROS Subscribers
+
+
 ```python
 ```
 
