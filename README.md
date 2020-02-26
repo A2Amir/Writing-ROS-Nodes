@@ -32,14 +32,16 @@ Below is the Explanation of the code for **the simple_mover node**, followed by 
 
 First, open a new terminal, next: 
 
-	cd ~/catkin_ws/src/simple_arm/
-	mkdir scripts
-	cd scripts
-	touch simple_mover
-	nano simple_mover
+	1. cd ~/catkin_ws/src/simple_arm/
+	2. mkdir scripts
+	3. cd scripts
+	4. touch simple_mover
+	5. nano simple_mover
 
-	You have opened the simple_mover script with the nano editor, now copy and paste the code below from [this file]() into the script and use ctrl-x followed by y then enter to save the script.
+	6. You have opened the simple_mover script with the nano editor, now copy 
+	and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py) into the script 	
+	and use ctrl-x followed by y then enter to save the script.
 
-	chmod u+x simple_mover
+	7. chmod u+x simple_mover
  
 #### The code: Explained
