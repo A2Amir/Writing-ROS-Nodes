@@ -215,33 +215,40 @@ Note: Defining a custom message type is very similar, with the only differences 
 
 ### Modifying CMakeLists.txt
 
-In order for catkin to generate the python modules or C++ libraries which allow you to utilize messages in your code you must first modify simple_arm’s CMakeLists.txt (~/catkin_ws/src/simple_arm/CMakeLists.txt).
+In order for catkin to generate the python modules or C++ libraries which allow to utilize messages in my code I must first modify simple_arm’s CMakeLists.txt (~/catkin_ws/src/simple_arm/CMakeLists.txt).
+
 	cd ~/catkin_ws/src/simple_arm/ 	
-nano   CMakeLists.txt
-CMake is the build tool underlying catkin, and CMakeLists.txt is nothing more than a CMake script used by catkin. If you’re familiar with GNU make, and the concept of makefiles, this is a similar concept.
+	nano   CMakeLists.txt
+
+CMake is the build tool underlying catkin and CMakeLists.txt is nothing more than a CMake script used by catkin. If you’re familiar with GNU make and the concept of makefiles, this is a similar concept.
+
 First, ensure that the find_package() macro lists std_msgs and message_generation as required packages. The find_package() macro should look as follows:
-find_package(catkin REQUIRED COMPONENTS
-        std_msgs
-        message_generation
-)
+
+	find_package(catkin REQUIRED COMPONENTS
+		std_msgs
+		message_generation
+	)
+	
 As the names might imply, the std_msgs package contains all of the basic message types, and message_generation is required to generate message libraries for all the supported languages (cpp, lisp, python, javascript). 
 Next, uncomment the commented-out add_service_files() macro so it looks like this:
-## Generate services in the 'srv' folder
-add_service_files(
-   FILES
-   GoToPosition.srv
-)
 
-This tells catkin which files to generate code for.
-Lastly, make sure that the generate_messages() macro is uncommented, as follows:
-generate_messages(
-   DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
-)
+	## Generate services in the 'srv' folder
+	add_service_files(
+	   FILES
+	   GoToPosition.srv
+	)
+
+This tells catkin which files to generate code for. Lastly, make sure that the generate_messages() macro is uncommented, as follows:
+
+	generate_messages(
+	   DEPENDENCIES
+	   std_msgs  # Or other packages containing msgs
+	)
 
 This macro is actually responsible for generating the code. For more information about CMakeLists.txt check out [this page](http://wiki.ros.org/catkin/CMakeLists.txt) on the ROS wiki.
-Then use use ctrl-x followed by y then enter to save the script 
 
+
+Then use use ctrl-x followed by y then enter to save the script 
 
 ```python
 ```
