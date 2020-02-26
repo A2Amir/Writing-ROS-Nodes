@@ -408,7 +408,58 @@ if __name__ == '__main__':
         pass
 
 ```
-This section of code is similar, to that of simple_mover().
+This section of code is similar, to that of simple_mover(). I've written the arm_mover node and the next step is to launch it and then test it out by interacting with the service via the command line!
+
+### Launching the project with the new service
+
+To get the **arm_mover** node, and accompanying **safe_move** service to launch along with all of the other nodes, you will modify **robot_spawn.launch**.
+
+	Cd ~/catkin_ws/src/simple_arm/launch
+	Nano robot_spawn.launch
+
+To get the arm_mover node to launch, simply add the following:
+
+	  <!-- The arm mover node -->cd ..
+	  <node name="arm_mover" type="arm_mover" pkg="simple_arm">
+	    <rosparam>
+	      min_joint_1_angle: 0
+	      max_joint_1_angle: 1.57
+	      min_joint_2_angle: 0
+	      max_joint_2_angle: 1.0
+	    </rosparam>
+	  </node>
+	  
+More information on the format of the launch file can be found [here](http://wiki.ros.org/roslaunch/XML).
+
+### Testing the new service
+
+Now that I've modified the launch file and I am ready to test everything out. To do so, launch the simple_arm, verify that the arm_mover node is running, and that the safe_move service is listed:
+
+Note: You will need to make sure that you've exited out of your previous roslaunch session before re-launching.
+
+	 cd ~/catkin_ws
+	 catkin_make
+	 source devel/setup.bash
+	 roslaunch simple_arm robot_spawn.launch
+	 
+Then, in a new terminal, verify that the node and service have indeed launched.
+
+	 rosnode list
+	 rosservice list
+	 
+Assuming that both the service (/arm_mover/safe_move) and the node (/arm_mover) show up as expected (If they've not, check the logs in the **roscore** console), you can now interact with the service using **rosservice**.
+
+To view the camera image stream, I can use the command **rqt_image_view** (you can learn more about rqt and the associated tools [here](http://wiki.ros.org/rqt)):
+	
+	rqt_image_view /rgb_camera/image_raw
+
+
+
+<p align="right">
+<img src="./img/1.png" alt="Running arm_mover code" />
+<p align="center">
+	
+### Adjusting the view
 ```python
 ```
 
