@@ -28,7 +28,7 @@ Note:Choosing a good **queue_size** is somewhat subjective, setting queue_size=0
 
 #### Simple Mover: The Code
 
-Below is the Explanation of the code for **the simple_mover node**, followed by a step-by-step explanation of what is happening. 
+Below is the Explanation of the code for **[the simple_mover node](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py)**, followed by a step-by-step explanation of what is happening. 
 
 First, open a new terminal, next: 
 
@@ -38,7 +38,7 @@ First, open a new terminal, next:
 	4. touch simple_mover
 	5. nano simple_mover
 
-	6. You have opened the simple_mover script with the nano editor, now copy 
+6. I have opened the simple_mover script with the nano editor, now copy 
 	and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py) into the script 	
 	and use ctrl-x followed by y then enter to save the script.
 
