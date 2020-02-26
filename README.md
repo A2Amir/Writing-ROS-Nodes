@@ -661,7 +661,7 @@ All levels of logging messages are recorded in ROS log files, but some message l
 
 
 <p align="right">
-<img src="./img/3.png" alt="Running arm_mover code"  height="150" width="300"/>
+<img src="./img/3.png" alt="Running arm_mover code"  height="200" width="400"/>
 <p align="right">
 
 ### Filtering and saving log messages from /rosout
