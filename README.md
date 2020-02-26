@@ -270,27 +270,34 @@ You are now ready to build the package! For more information about package.xml, 
 
 ### Building  the package
 
-If you build the workspace successfully, you should now find that a python package containing a module for the new service GoToPosition has been created deep down in the devel directory.
-cd ~/catkin_ws
-catkin_make
-cd devel/lib/python2.7/dist-packages
-ls
+If I build the workspace successfully, I should now find that a python package containing a module for the new service GoToPosition has been created deep down in the devel directory.
+
+	cd ~/catkin_ws
+	catkin_make
+	cd devel/lib/python2.7/dist-packages
+	ls+
+	
 After sourcing the newly created setup.bash, the new simple_arm package has now become part of your PYTHONPATH environment variable, and is ready for use!
+
 	cd ~/catkin_ws  	
 	source  devel/setup.bash
 	env | grep PYTHONPATH
-Creating the empty arm_mover node script
-The steps you take to create the arm_mover node are exactly the same as the steps you took to create the simple_mover script, excepting the actual name of the script itself.
+	
+### Creating the empty arm_mover node script
+
+The steps I take to create the arm_mover node are exactly the same as the steps I took to create the simple_mover script, excepting the actual name of the script itself.
 
 	cd ~/catkin_ws
-	cd src/simple_arm/scripts (if there is no scripts folder, make it by using mkdir scripts then cd to itarm_monode/)
+	cd src/simple_arm/scripts (if there is no scripts folder, make it by using mkdir scripts then navigate to it by cd arm_monode/)
 	touch arm_mover
 	chmod u+x arm_mover
-Arm Mover: The Code
+	
+### Arm Mover: The Code
+
 	cd ~/catkin_ws
 	cd src/simple_arm/scripts
 	nano arm_mover
-You have opened the arm_mover script with the nano editor, now copy and paste the code below from [this file]() into the script and use ctrl-x followed by y then enter to save the script.
+	You have opened the arm_mover script with the nano editor, now copy and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/arm_mover.py) into the arm_mover and use ctrl-x followed by y then enter to save the script.
 
 
 ```python
