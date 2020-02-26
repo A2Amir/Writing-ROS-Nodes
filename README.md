@@ -177,7 +177,7 @@ In the code above, a new service message is created by calling the serviceClassN
 
 For other ways to pass data to service_proxy, see the ROS documentation [here](http://wiki.ros.org/rospy/Overview/Services).
 
-#### Description of Arm Mover
+### Description of Arm Mover
 
 In many respects, arm_mover is quite similar to simple_mover. Like simple_mover, it is responsible for commanding the arm to move. However, instead of simply commanding the arm to follow a predetermined trajectory, the arm_mover node provides the service move_arm, which allows other nodes in the system to send movement_commands.
 
@@ -212,6 +212,35 @@ Then use use ctrl-x followed by y then enter to save the script
 * The second section contains is the service response. The response contains only a single field, time_elapsed. The time_elapsed field is of type duration and is responsible for indicating how long it took the arm to perform the movement.
 
 Note: Defining a custom message type is very similar, with the only differences being that message definitions live within the msg directory of the package root, have a “.msg” extension, rather than .srv, and do not contain the “---” section divider. You can find more detailed information on creating messages and services [here](http://wiki.ros.org/msg) and [here](http://wiki.ros.org/srv) respectively.
+
+### Modifying CMakeLists.txt
+
+In order for catkin to generate the python modules or C++ libraries which allow you to utilize messages in your code you must first modify simple_arm’s CMakeLists.txt (~/catkin_ws/src/simple_arm/CMakeLists.txt).
+	cd ~/catkin_ws/src/simple_arm/ 	
+nano   CMakeLists.txt
+CMake is the build tool underlying catkin, and CMakeLists.txt is nothing more than a CMake script used by catkin. If you’re familiar with GNU make, and the concept of makefiles, this is a similar concept.
+First, ensure that the find_package() macro lists std_msgs and message_generation as required packages. The find_package() macro should look as follows:
+find_package(catkin REQUIRED COMPONENTS
+        std_msgs
+        message_generation
+)
+As the names might imply, the std_msgs package contains all of the basic message types, and message_generation is required to generate message libraries for all the supported languages (cpp, lisp, python, javascript). 
+Next, uncomment the commented-out add_service_files() macro so it looks like this:
+## Generate services in the 'srv' folder
+add_service_files(
+   FILES
+   GoToPosition.srv
+)
+
+This tells catkin which files to generate code for.
+Lastly, make sure that the generate_messages() macro is uncommented, as follows:
+generate_messages(
+   DEPENDENCIES
+   std_msgs  # Or other packages containing msgs
+)
+
+This macro is actually responsible for generating the code. For more information about CMakeLists.txt check out [this page](http://wiki.ros.org/catkin/CMakeLists.txt) on the ROS wiki.
+Then use use ctrl-x followed by y then enter to save the script 
 
 
 ```python
