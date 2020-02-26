@@ -11,7 +11,7 @@ In this lesson, I will be writing nodes in Python that publish and subscribe to 
 
 # 1. ROS Publishers
 
-#### Defining Publishers
+### Defining Publishers
 
 Before seeing the code for **simple_mover**, it may be helpful to see how ROS Publishers work in Python. Publishers allow a node to send messages to a topic, so that data from the node can be used in other parts of the ROS system. In Python, ROS publishers typically have the following definition format, although other parameters and arguments are possible:
 
@@ -21,7 +21,7 @@ Before seeing the code for **simple_mover**, it may be helpful to see how ROS Pu
 
 * **Asynchronous publishing** means that a publisher can store messages in a queue until the messages can be sent. If the number of messages published exceeds the size of the queue, the oldest messages are dropped. **The queue size can be set using the queue_size parameter**.
 
-#### Using Publishers
+### Using Publishers
 
 Once the publisher has been created as above, a message with the specified data type can be published as follows:
 	  
@@ -29,7 +29,7 @@ Once the publisher has been created as above, a message with the specified data 
  
 Note:Choosing a good **queue_size** is somewhat subjective, setting queue_size=0 actually creates an infinite queue. This could lead to memory leakage if the messages are published faster than they are picked up. providing a little room for messages to queue without being too large, is a good choice.
 
-#### Simple Mover: The Code
+### Simple Mover: The Code
 
 Below is the Explanation of the code for **[the simple_mover node](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/simple_mover.py)**, followed by a step-by-step explanation of what is happening. 
 
@@ -46,7 +46,7 @@ First, open a new terminal, next:
 
 7. chmod u+x simple_mover
  
-#### The code: Explained
+### The code: Explained
 
 
 ```python
@@ -147,7 +147,7 @@ Below is a gif showing what the expected movements should look like.
 
 # 2. ROS Services
 
-#### Defining services
+### Defining services
 
 In this section I am going to code an another node called **arm_mover** which implements the **safe_move** service to allow the arm to be controlled with service calls.
 
@@ -162,7 +162,7 @@ Here, the **service_name** is the name given to the service. Other nodes will us
 The **handler** is the name of the function or method that handles the incoming service message. This function is called each time the service is called and the message from the service call is passed to the handler as an argument. The handler should return an appropriate service response message.
 
 
-#### Using Services
+### Using Services
 
 Services can be called directly from the command line and I will show you an example of this in the upcoming arm_mover concepts. On the other hand, to use a ROS service from within another node, I will define a ServiceProxy, which provides the interface for sending messages to the service:
 
@@ -175,10 +175,43 @@ One way the ServiceProxy can then be used to send requests is as follows:
 
 In the code above, a new service message is created by calling the serviceClassNameRequest() method. This method is provided by rospy and its name is given by appending Request() to the name used for serviceClassName. Since the message is new, the message attributes should be updated to have the appropriate data. Next, the service_proxy can be called with the message and the response stored.
 
+For other ways to pass data to service_proxy, see the ROS documentation [here](http://wiki.ros.org/rospy/Overview/Services).
+
 #### Description of Arm Mover
 
+In many respects, arm_mover is quite similar to simple_mover. Like simple_mover, it is responsible for commanding the arm to move. However, instead of simply commanding the arm to follow a predetermined trajectory, the arm_mover node provides the service move_arm, which allows other nodes in the system to send movement_commands.
 
-For other ways to pass data to service_proxy, see the ROS documentation here.
+In addition to allowing movements via a service interface, arm_mover also allows for configurable minimum and maximum joint angles, by using parameters.
+
+
+### Creating a new service definition
+
+As learned earlier, an interaction with a service consists of two messages being passed. A request passed to the service, and a response received from the service. The definitions of the request and response message type are contained within .srv files living in the srv directory under the package’s root.
+
+Let’s define a new service for simple_arm. I call it GoToPosition.
+
+	cd ~/catkin_ws/src/simple_arm/
+	mkdir srv
+	cd srv
+	touch GoToPosition.srv
+	nano GoToPosition.srv
+	
+I should now add into GoToPosition.srv, following:
+	
+	float64 joint_1
+	float64 joint_2
+	---
+	duration time_elapsed
+	
+Then use use ctrl-x followed by y then enter to save the script
+
+**Service definitions always contain two sections, separated by a ‘---’ line.**
+
+* The first section is the definition of the request message. Here, a request consists of two float64 fields, one for each of simple_arm’s joints. 
+
+* The second section contains is the service response. The response contains only a single field, time_elapsed. The time_elapsed field is of type duration and is responsible for indicating how long it took the arm to perform the movement.
+
+Note: Defining a custom message type is very similar, with the only differences being that message definitions live within the msg directory of the package root, have a “.msg” extension, rather than .srv, and do not contain the “---” section divider. You can find more detailed information on creating messages and services [here](http://wiki.ros.org/msg) and [here](http://wiki.ros.org/srv) respectively.
 
 
 ```python
