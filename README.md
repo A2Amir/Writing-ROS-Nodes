@@ -497,7 +497,125 @@ As seen above all of the blocks are within the field of view.
 # 3. ROS Subscribers
 
 
+A Subscriber enables my node to read messages from a topic, allowing useful data to be streamed into the node. In Python, ROS subscribers frequently have the following format, although other parameters and arguments are possible:
+
+	sub1 = rospy.Subscriber("/topic_name", message_type, callback_function)
+
+* The **"/topic_name"** indicates which topic the Subscriber should listen to.
+* The** message_type** is the type of message being published on **"/topic_name"**.
+* The **callback_function** is the name of the function that should be called with each incoming message. Each time a message is received, it is passed as an argument to callback_function. Typically, this function is defined in your node to perform a useful action with the incoming data. 
+
+Note that unlike service handler functions, the callback_function is not required to return anything.For more information about subscribers, see the documentation [here](http://docs.ros.org/api/rospy/html/rospy.topics.Subscriber-class.html). Let's move on to the look_away node so you can see subscribers in action!
+
+### Look Away node
+
+To see a Subscriber in action, I will write a node called **look_away**. The look_away node will subscribe to **the /rgb_camera/image_raw topic**, which has image data from the camera mounted on the end of the robotic arm. Whenever the camera is pointed towards an uninteresting image - in this case, an image with uniform color - the callback function will move the arm to something more interesting. 
+
+### Creating the empty look_away node script
+
+	cd ~/catkin_ws
+	cd src/simple_arm/scripts(if there is no scripts folder, creat it with mkdir scripts and navigate to it with cd scripts)
+	touch look_away
+	chmod u+x look_away
+	nano look_away
+	
+You have opened the look_away script with the nano editor, now copy and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/look_away.py) into the script and use ctrl-x followed by y then enter to save the script.
+
+### [The code](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/look_away.py): explained
+
 ```python
+#!/usr/bin/env python
+
+import math
+import rospy
+from sensor_msgs.msg import Image, JointState
+from simple_arm.srv import *
 ```
 
+The imported modules are similar to those in simple_arm, except this time, we have the Image message type being imported so that the camera data can be used.
 
+#### The LookAway Class and __init__ method
+
+```python
+class LookAway(object):
+    def __init__(self):
+        rospy.init_node('look_away')
+
+        self.sub1 = rospy.Subscriber('/simple_arm/joint_states', 
+                                     JointState, self.joint_states_callback)
+        self.sub2 = rospy.Subscriber("rgb_camera/image_raw", 
+                                     Image, self.look_away_callback)
+        self.safe_move = rospy.ServiceProxy('/arm_mover/safe_move', 
+                                     GoToPosition)
+
+        self.last_position = None
+        self.arm_moving = False
+
+        rospy.spin()
+
+```
+I define a class for this node to better keep track of the robot arm's current movement state and position history. Just as in the node definitions before, the node is initialized using ropsy.init_node, and at the end of the method rospy.spin() is used to block until a shutdown request is received by the node.
+
+The first subscriber, ** self.sub1**, subscribes to **the /simple_arm/joint_states topic** to keep track changes in the position of the arm.
+
+The second subscriber, **self.sub2**, subscribes to **the /rgb_camera/image_raw topic**. The message type here is Image and with each message, the look_away_callback function is called.
+
+A **ServiceProxy **is how rospy enables calling a service from a node. The ServiceProxy here is created using the name of the service I wish to call along with the service class definition: in this case **/arm_mover/safe_move and GoToPosition**.
+
+
+#### The helper methods
+
+```python
+    def uniform_image(self, image):
+        return all(value == image[0] for value in image)
+
+    def coord_equal(self, coord_1, coord_2):
+        if coord_1 is None or coord_2 is None:
+            return False
+        tolerance = .0005
+        result = abs(coord_1[0] - coord_2[0]) <= abs(tolerance)
+        result = result and abs(coord_1[1] - coord_2[1]) <= abs(tolerance)
+        return result
+```
+
+There are two helper methods defined in the code: uniform_image and coord_equal. The uniform_image method takes an image as input and checks if all color values in the image are the same as the value of the first pixel. This essentially checks that all the color values in the image are the same.
+
+The coord_equal method returns True if the coordinates coord_1 and coord_2 have equal components up to the specified tolerance. 
+
+#### The callback functions
+
+
+```python
+def joint_states_callback(self, data):
+        if self.coord_equal(data.position, self.last_position):
+            self.arm_moving = False
+        else:
+            self.last_position = data.position
+            self.arm_moving = True
+
+    def look_away_callback(self, data):
+        if not self.arm_moving and self.uniform_image(data.data):
+            try:
+                rospy.wait_for_service('/arm_mover/safe_move')
+                msg = GoToPositionRequest()
+                msg.joint_1 = 1.57
+                msg.joint_2 = 1.57
+                response = self.safe_move(msg)
+
+                rospy.logwarn("Camera detecting uniform image. \
+                               Elapsed time to look at something nicer:\n%s", 
+                               response)
+
+            except rospy.ServiceException, e:
+                rospy.logwarn("Service call failed: %s", e)
+```
+The look_away_callback is receiving data from the /rgb_camera/image_raw topic. The first line of this method verifies that the arm is not moving and also checks if the the image is uniform. If the arm isn't moving and the image is uniform, then a GoToPositionRequest() message is created and sent using the safe_move service, moving both joint angles to 1.57. The method also logs a message warning you that the camera has detected a uniform image along with the elapsed time to return to a nicer image.
+
+
+```python
+
+```
+
+```python
+
+```
