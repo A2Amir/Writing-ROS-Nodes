@@ -258,7 +258,7 @@ When worring about the dependencies check in [the previous lesson](https://githu
 	
 	cd ~/catkin_ws/src/simple_arm/
 	nano   package.xml
-	add into package.xml:
+	add into package.xml the following:
 	    
 		 <build_depend>message_generation</build_depend>
  		 <run_depend>message_runtime</run_depend>
@@ -297,7 +297,7 @@ The steps I take to create the arm_mover node are exactly the same as the steps 
 	cd ~/catkin_ws
 	cd src/simple_arm/scripts
 	nano arm_mover
-	You have opened the arm_mover script with the nano editor, now copy and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/arm_mover.py) into the arm_mover and use ctrl-x followed by y then enter to save the script.
+You have opened the arm_mover script with the nano editor, now copy and paste the code below from [this file](https://github.com/A2Amir/Writing-ROS-Nodes/blob/master/Code/arm_mover.py) into the arm_mover and use ctrl-x followed by y then enter to save the script.
 
 
 ```python
